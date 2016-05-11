@@ -18,6 +18,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -25,7 +26,9 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import netgame.common.Client;
-import rocket.app.view.RocketMainController;
+
+import rocket.app.view.MortgageController;
+import rocketData.LoanRequest;
 import rocketServer.RocketHub;
 
 public class MainApp extends Application {
@@ -33,20 +36,24 @@ public class MainApp extends Application {
 	private Stage primaryStage;
 	private RocketHub rHub = null;
 	private RocketClient rClient = null;
-
+	private MortgageController rController; 
+	private final int PORT = 9004;
+	private final String COMPUTERNAME = "localhost";
+	
 	public static void main(String[] args) {
 		launch(args);
 	}
 
 	@Override
 	public void init() throws Exception {
+		StartHubAndClient();
 	}
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-
+		
 		// START is executed by the Application framework after INIT
-		BorderPane root = new BorderPane();
+		AnchorPane root = new AnchorPane();
 		Scene scene = new Scene(root, 1300, 500);
 
 		this.primaryStage = primaryStage;
@@ -67,20 +74,38 @@ public class MainApp extends Application {
 		
 	}
 	
+	public void StartHubAndClient()
+	{
+		//	Start the Hub and Client
+		
+		try {
+			rHub = new RocketHub(PORT);
+		} catch (Exception e) {
+			System.out.println("Error: Can't listen on port " + PORT);
+			e.printStackTrace();
+		}
+		
+		try {
+			rClient = new RocketClient(COMPUTERNAME, PORT);
+		} catch (IOException e) {
+			System.out.println("Can't Start Client");
+			e.printStackTrace();
+		}	
+	}
 	public void showRocketMenu() {
 		try {
 			// Load person overview.
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(MainApp.class.getResource("view/RocketMain.fxml"));
-			BorderPane ClientServerOverview = (BorderPane) loader.load();
+			loader.setLocation(MainApp.class.getResource("view/Mortgage.fxml"));
+			AnchorPane RocketMain = (AnchorPane) loader.load();
 
-			Scene scene = new Scene(ClientServerOverview);
+			Scene scene = new Scene(RocketMain);
 
 			primaryStage.setScene(scene);
 
 			// Give the controller access to the main app.
-			RocketMainController controller = loader.getController();
-			controller.setMainApp(this);
+			rController = loader.getController();
+			rController.setMainApp(this);
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -99,6 +124,8 @@ public class MainApp extends Application {
 
 	@Override
 	public void stop() throws Exception {
+		rClient.disconnect();
+		rHub.shutDownHub();
 	}
 
 	public void messageSend(final Object message) {
@@ -119,8 +146,11 @@ public class MainApp extends Application {
 		@Override
 		protected void messageReceived(final Object message) {
 			Platform.runLater(() -> {
-				if (message instanceof String) {
-				} else if (message instanceof Object) {
+				if (message instanceof LoanRequest) {
+					LoanRequest lq = (LoanRequest)message;
+					rController.HandleLoanRequestDetails(lq);
+				} 
+				else if (message instanceof Object) {
 				}
 			});
 		}
