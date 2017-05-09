@@ -1,13 +1,20 @@
 package rocketBase;
 
+import java.util.ArrayList;
+
 import org.apache.poi.ss.formula.functions.*;
+
+import exceptions.RateException;
+import rocketDomain.RateDomainModel;
 
 public class RateBLL {
 
 	private static RateDAL _RateDAL = new RateDAL();
 	
-	static double getRate(int GivenCreditScore) 
+	static double getRate(int GivenCreditScore) throws RateException 
 	{
+		double dInterestRate = 0;
+		
 		//TODO - RocketBLL RateBLL.getRate - make sure you throw any exception
 		
 		//		Call RateDAL.getAllRates... this returns an array of rates
@@ -19,10 +26,25 @@ public class RateBLL {
 		
 		//TODO - RocketBLL RateBLL.getRate
 		//			obviously this should be changed to return the determined rate
-		return 0;
+		
+		ArrayList<RateDomainModel> rates = RateDAL.getAllRates();
+		
+
+		//TODO: Filter the ArrayList...  look for the correct rate for the given credit score.
+		//	Easiest way is to apply a filter using a Lambda function.
+		//
+		//	Example... how to use Lambda functions:
+		//			https://github.com/CISC181/Lambda
+		
+		return dInterestRate;
 		
 		
 	}
+	
+	
+	
+	
+	
 	
 	
 	//TODO - RocketBLL RateBLL.getPayment 

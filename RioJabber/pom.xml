@@ -42,12 +42,7 @@
 	</properties>
 
 	<dependencies>
-		<dependency>
-			<groupId>edu.ud.cis.cisc181</groupId>
-			<artifactId>RocketBLL</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-			<scope>compile</scope>
-		</dependency>
+
 		<!-- Spring and Transactions -->
 
 		<dependency>
