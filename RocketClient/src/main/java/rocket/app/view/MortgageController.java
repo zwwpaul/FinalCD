@@ -23,6 +23,8 @@ public class MortgageController {
 	@FXML
 	private TextField txtCreditScore;
 	@FXML
+	private Button Calculate;
+	@FXML
 	private TextField txtMortgageAmt;
 	@FXML
 	private TextField txtIncome;
@@ -30,11 +32,20 @@ public class MortgageController {
 	private TextField txtExpenses;
 	@FXML
 	private TextField txtHouseCost;
+
 	@FXML
-	private ComboBox<Integer> cmbTerm;
+	private ComboBox cmbTerm;
 
 	@FXML
 	private Label lblMortgagePayment;
+
+	// I don't know why those options below cannot show in user's view.
+	@FXML
+	private void InitialBox() {
+		ObservableList<String> OptionsList = FXCollections.observableArrayList("15", "30");
+		cmbTerm.setValue("Please Select");
+		cmbTerm.setItems(OptionsList);
+	}
 
 	private TextField txtNew;
 
@@ -63,7 +74,6 @@ public class MortgageController {
 		// after it's returned back from the server, the payment (dPayment)
 		// should be calculated.
 		// Display dPayment on the form, rounded to two decimal places
-
 		double rate = lRequest.getdRate();
 		double payment = Math.abs(lRequest.getdPayment());
 		double maxp1 = lRequest.getiIncome() * 0.28;
@@ -84,4 +94,5 @@ public class MortgageController {
 		}
 
 	}
+
 }

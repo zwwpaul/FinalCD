@@ -30,7 +30,7 @@
         </rowConstraints>
          <children>
             <Label text="Annual Income" GridPane.rowIndex="2" />
-            <Button mnemonicParsing="false" onAction="#btnCalculatePayment" prefHeight="40.0" prefWidth="127.0" text="Calculate" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <Button fx:id="Calculate" mnemonicParsing="false" onAction="#btnCalculatePayment" prefHeight="40.0" prefWidth="127.0" text="Calculate" GridPane.columnIndex="1" GridPane.rowIndex="6" />
             <Label text="Monthly Expenses" GridPane.rowIndex="3" />
             <Label text="Mortgage Term" GridPane.rowIndex="4" />
             <Label text="House Cost" />
